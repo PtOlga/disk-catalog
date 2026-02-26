@@ -1,9 +1,9 @@
 <!DOCTYPE html>
-<html lang="ru">
+<html lang="en">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Каталог дисков</title>
+  <title>Disk Catalog</title>
   <link rel="manifest" href="manifest.json">
   <style>
     * { box-sizing: border-box; margin: 0; padding: 0; }
@@ -29,16 +29,16 @@
 </head>
 <body>
   <header>
-    <h1>📀 Каталог дисков</h1>
+    <h1>📀 Disk Catalog</h1>
     <span id="count" style="font-size:0.85rem;opacity:0.8"></span>
   </header>
   <div class="search-bar">
-    <input type="text" id="search" placeholder="🔍 Поиск по названию..." oninput="filterItems()">
+    <input type="text" id="search" placeholder="🔍 Search by title..." oninput="filterItems()">
   </div>
   <div class="filters">
-    <button class="filter-btn active" onclick="setFilter('all', this)">Все</button>
+    <button class="filter-btn active" onclick="setFilter('all', this)">All</button>
     <button class="filter-btn" onclick="setFilter('dvd', this)">🎬 DVD</button>
-    <button class="filter-btn" onclick="setFilter('cd_book', this)">📚 Книги</button>
+    <button class="filter-btn" onclick="setFilter('cd_book', this)">📚 Books</button>
   </div>
   <div class="catalog-list" id="list"></div>
   <a href="scan.html" class="fab">＋</a>

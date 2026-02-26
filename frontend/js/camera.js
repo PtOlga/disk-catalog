@@ -17,7 +17,7 @@ async function startBarcodeScan() {
     const item = await scanBarcode(result.text, currentType);
     showResult(item);
   } catch (e) {
-    alert("Штрихкод не распознан. Попробуйте ещё раз или введите название вручную.");
+    alert("Barcode not recognised. Please try again or enter the title manually.");
   }
 }
 
@@ -36,7 +36,7 @@ async function scanCover(input) {
       const item = await scanCoverBase64(base64, currentType);
       showResult(item);
     } catch (err) {
-      alert("Не удалось распознать обложку. Попробуйте ввести название вручную.");
+      alert("Could not recognise the cover. Please enter the title manually.");
     }
   };
   reader.readAsDataURL(file);
@@ -49,7 +49,7 @@ async function searchManual() {
     const item = await scanBarcode(title, currentType);
     showResult(item);
   } catch {
-    alert("Не найдено по названию «" + title + "»");
+    alert("Not found: «" + title + "»");
   }
 }
 
@@ -67,9 +67,9 @@ async function saveItem() {
   if (!scannedItem) return;
   try {
     await addToCatalog(scannedItem);
-    alert("✅ Добавлено в каталог!");
+    alert("✅ Added to catalog!");
     window.location.href = "index.html";
   } catch (e) {
-    alert("Ошибка сохранения: " + e.message);
+    alert("Save error: " + e.message);
   }
 }
