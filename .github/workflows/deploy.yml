@@ -25,10 +25,10 @@ jobs:
             OMDB_API_KEY=${{ secrets.OMDB_API_KEY }}
             GOOGLE_CLOUD_PROJECT=${{ secrets.GCP_PROJECT_ID }}
 
-      - name: Install Firebase CLI
-        run: npm install -g firebase-tools
-
       - name: Deploy Frontend to Firebase Hosting
-        run: |
-          echo '{"projects":{"default":"${{ secrets.GCP_PROJECT_ID }}"}}' > .firebaserc
-          firebase deploy --only hosting --project "${{ secrets.GCP_PROJECT_ID }}"
+        uses: FirebaseExtended/action-hosting-deploy@v0
+        with:
+          repoToken: ${{ secrets.GITHUB_TOKEN }}
+          firebaseServiceAccount: ${{ secrets.GCP_CREDENTIALS }}
+          projectId: ${{ secrets.GCP_PROJECT_ID }}
+          channelId: live
