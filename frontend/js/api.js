@@ -1,5 +1,5 @@
 // Заменить URL после деплоя на Cloud Run
-const API_URL = "https://your-cloud-run-url.run.app";
+const API_URL = "https://disk-catalog-api-759669863291.europe-west1.run.app";
 
 async function fetchCatalog(search = "", type = "") {
   const params = new URLSearchParams();
