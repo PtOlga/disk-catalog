@@ -1,0 +1,18 @@
+# Python
+__pycache__/
+*.pyc
+.venv/
+venv/
+
+# Environment & secrets
+.env
+*-key.json
+firebase-key.json
+*-credentials.json
+
+# Node
+node_modules/
+
+# OS
+.DS_Store
+Thumbs.db
