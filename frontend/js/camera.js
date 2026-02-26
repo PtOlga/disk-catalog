@@ -56,11 +56,13 @@ async function startBarcodeScan() {
     btn.classList.add("btn-danger");
   }
   container.innerHTML = '<p style="text-align:center;padding:8px;color:#555;font-size:0.9rem">Point camera at barcode...</p>';
+  const videoEl = document.createElement("video");
+  container.appendChild(videoEl);
 
   codeReader = new ZXing.BrowserMultiFormatReader();
 
   try {
-    const result = await codeReader.decodeOnceFromVideoDevice(undefined, "barcode-reader");
+    const result = await codeReader.decodeOnceFromVideoDevice(undefined, videoEl);
     stopBarcodeScan();
     const item = await scanBarcode(result.text, currentType);
     showResult(item);
