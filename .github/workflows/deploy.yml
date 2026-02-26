@@ -24,3 +24,9 @@ jobs:
           env_vars: |
             OMDB_API_KEY=${{ secrets.OMDB_API_KEY }}
             GOOGLE_CLOUD_PROJECT=${{ secrets.GCP_PROJECT_ID }}
+
+      - name: Install Firebase CLI
+        run: npm install -g firebase-tools
+
+      - name: Deploy Frontend to Firebase Hosting
+        run: firebase deploy --only hosting --token "${{ secrets.FIREBASE_TOKEN }}" --project "${{ secrets.GCP_PROJECT_ID }}"
