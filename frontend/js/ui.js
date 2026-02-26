@@ -4,10 +4,10 @@ let currentFilter = "all";
 async function loadCatalog() {
   try {
     allItems = await fetchCatalog();
-    document.getElementById("count").textContent = `${allItems.length} дисков`;
+    document.getElementById("count").textContent = `${allItems.length} discs`;
     renderList(allItems);
   } catch (e) {
-    document.getElementById("list").innerHTML = '<div class="empty">Ошибка загрузки. Проверьте подключение.</div>';
+    document.getElementById("list").innerHTML = '<div class="empty">Failed to load. Check your connection.</div>';
   }
 }
 
@@ -29,7 +29,7 @@ function filterItems() {
 function renderList(items) {
   const list = document.getElementById("list");
   if (!items.length) {
-    list.innerHTML = '<div class="empty">Ничего не найдено</div>';
+    list.innerHTML = '<div class="empty">Nothing found</div>';
     return;
   }
   list.innerHTML = items.map(item => `
@@ -43,7 +43,7 @@ function renderList(items) {
         <p>${[item.author, item.year].filter(Boolean).join(" · ")}</p>
         <p>${item.genre || ''}</p>
         <span class="item-badge ${item.type === 'dvd' ? 'badge-dvd' : 'badge-book'}">
-          ${item.type === 'dvd' ? '🎬 DVD' : '📚 CD книга'}
+          ${item.type === 'dvd' ? '🎬 DVD' : '📚 CD Book'}
         </span>
       </div>
     </div>
