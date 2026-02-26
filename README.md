@@ -1,46 +1,46 @@
 # 📀 Disk Catalog
 
-Каталог домашних DVD и CD-книг. Сканирование штрихкода и OCR обложек, поиск по каталогу с телефона.
+A personal home catalog for DVD movies and CD audiobooks. Scan barcodes or photograph covers to add discs automatically, then search your collection from any phone.
 
-## Стек
+## Stack
 - **Backend**: Python FastAPI → Google Cloud Run
-- **База данных**: Firebase Firestore
-- **OCR обложек**: Google Vision API
-- **Фильмы**: OMDb API
-- **Книги**: Open Library API
+- **Database**: Firebase Firestore
+- **Cover OCR**: Google Vision API
+- **Movies**: OMDb API
+- **Books**: Open Library API
 - **Frontend**: Vanilla JS PWA → Firebase Hosting
 
-## Локальный запуск
+## Local Development
 
 ```bash
 cd backend
 python -m venv venv
 source venv/bin/activate  # Windows: venv\Scripts\activate
 pip install -r requirements.txt
-cp .env.example .env      # заполнить ключи
+cp .env.example .env      # fill in your keys
 uvicorn app.main:app --reload
 ```
 
-Документация API: http://localhost:8000/docs
+API docs available at: http://localhost:8000/docs
 
-## Переменные окружения
+## Environment Variables
 
-| Переменная | Где взять |
+| Variable | Where to get it |
 |---|---|
-| `OMDB_API_KEY` | omdbapi.com → бесплатный ключ |
+| `OMDB_API_KEY` | omdbapi.com → free API key |
 | `GOOGLE_CLOUD_PROJECT` | console.cloud.google.com |
 | `FIREBASE_CREDENTIALS_PATH` | Firebase → Service Account → JSON |
 
-## Деплой
+## Deployment
 
-Push в ветку `main` → GitHub Actions автоматически деплоит бэкенд на Cloud Run.
+Push to `main` branch → GitHub Actions automatically deploys the backend to Cloud Run.
 
-Нужно добавить секреты в GitHub (Settings → Secrets):
-- `GCP_CREDENTIALS` — JSON сервисного аккаунта GCP
-- `GCP_PROJECT_ID` — ID проекта
-- `OMDB_API_KEY` — ключ OMDb
+Add the following secrets in GitHub (Settings → Secrets → Actions):
+- `GCP_CREDENTIALS` — GCP service account JSON (full file contents)
+- `GCP_PROJECT_ID` — your GCP project ID
+- `OMDB_API_KEY` — your OMDb API key
 
-## Структура проекта
+## Project Structure
 
 ```
 disk-catalog/
@@ -54,8 +54,8 @@ disk-catalog/
 │   ├── Dockerfile
 │   └── requirements.txt
 ├── frontend/             # PWA (Firebase Hosting)
-│   ├── index.html        # список + поиск
-│   ├── scan.html         # сканирование
+│   ├── index.html        # catalog list + search
+│   ├── scan.html         # disc scanning
 │   └── js/
 └── .github/workflows/    # CI/CD
 ```
