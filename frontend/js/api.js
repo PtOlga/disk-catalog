@@ -39,3 +39,24 @@ async function addToCatalog(item) {
   if (!res.ok) throw new Error("Ошибка сохранения");
   return res.json();
 }
+
+async function getItem(id) {
+  const res = await fetch(`${API_URL}/catalog/${id}`);
+  if (!res.ok) throw new Error("Not found");
+  return res.json();
+}
+
+async function updateItem(id, item) {
+  const res = await fetch(`${API_URL}/catalog/${id}`, {
+    method: "PUT",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(item)
+  });
+  if (!res.ok) throw new Error("Save error");
+  return res.json();
+}
+
+async function deleteItem(id) {
+  const res = await fetch(`${API_URL}/catalog/${id}`, { method: "DELETE" });
+  if (!res.ok) throw new Error("Delete error");
+}

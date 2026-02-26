@@ -23,5 +23,17 @@ async def add_item(item: CatalogItem) -> CatalogItem:
     item.id = ref.id
     return item
 
+async def get_item(item_id: str) -> CatalogItem:
+    doc = db.collection(COLLECTION).document(item_id).get()
+    if not doc.exists:
+        raise ValueError("Not found")
+    return CatalogItem(id=doc.id, **doc.to_dict())
+
+async def update_item(item_id: str, item: CatalogItem) -> CatalogItem:
+    data = item.model_dump(exclude={"id"})
+    db.collection(COLLECTION).document(item_id).set(data)
+    item.id = item_id
+    return item
+
 async def delete_item(item_id: str):
     db.collection(COLLECTION).document(item_id).delete()

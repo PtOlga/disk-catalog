@@ -15,6 +15,23 @@ async def add_item(item: CatalogItem):
     """Добавить диск в каталог"""
     return await firestore.add_item(item)
 
+@router.get("/{item_id}", response_model=CatalogItem)
+async def get_item(item_id: str):
+    """Получить диск по ID"""
+    try:
+        return await firestore.get_item(item_id)
+    except ValueError:
+        raise HTTPException(status_code=404, detail="Not found")
+
+@router.put("/{item_id}", response_model=CatalogItem)
+async def update_item(item_id: str, item: CatalogItem):
+    """Обновить диск"""
+    try:
+        await firestore.get_item(item_id)
+    except ValueError:
+        raise HTTPException(status_code=404, detail="Not found")
+    return await firestore.update_item(item_id, item)
+
 @router.delete("/{item_id}")
 async def delete_item(item_id: str):
     """Удалить диск из каталога"""

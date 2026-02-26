@@ -33,7 +33,7 @@ function renderList(items) {
     return;
   }
   list.innerHTML = items.map(item => `
-    <div class="item-card">
+    <div class="item-card" onclick="location.href='edit.html?id=${item.id}'" style="cursor:pointer">
       <img class="item-cover"
         src="${item.cover_url || ''}"
         onerror="this.style.background='#ddd';this.src=''"
@@ -46,6 +46,7 @@ function renderList(items) {
           ${item.type === 'dvd' ? '🎬 DVD' : '📚 CD Book'}
         </span>
       </div>
+      <div style="margin-left:auto;display:flex;align-items:center;padding-left:8px;color:#aaa;font-size:1.2rem">›</div>
     </div>
   `).join("");
 }
