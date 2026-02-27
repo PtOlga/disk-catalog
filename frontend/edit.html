@@ -48,8 +48,10 @@
       <div class="cover-row">
         <img id="cover-preview" class="cover-preview" alt="" style="display:none">
         <div class="cover-actions">
-          <input type="file" id="cover-file" accept="image/*" capture="environment" style="display:none" onchange="replaceCover(this)">
-          <button class="btn-sm btn-sm-secondary" onclick="document.getElementById('cover-file').click()">📷 Replace Cover</button>
+          <input type="file" id="cover-file-camera" accept="image/*" capture="environment" style="display:none" onchange="replaceCover(this)">
+          <input type="file" id="cover-file-gallery" accept="image/*" style="display:none" onchange="replaceCover(this)">
+          <button class="btn-sm btn-sm-secondary" onclick="document.getElementById('cover-file-camera').click()">📷 Camera</button>
+          <button class="btn-sm btn-sm-secondary" onclick="document.getElementById('cover-file-gallery').click()">🖼 Gallery</button>
           <span id="cover-uploading">Recognising...</span>
         </div>
       </div>

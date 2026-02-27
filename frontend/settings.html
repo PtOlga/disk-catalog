@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Settings</title>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600&family=DM+Serif+Display:ital@0;1&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg: #0f0f12; --surface: #1a1a20; --surface2: #22222a;
+      --border: #2e2e38; --accent: #7c6af7; --text: #f0f0f4; --text2: #8888a0;
+    }
+    [data-theme="light"] {
+      --bg: #f5f5f7; --surface: #ffffff; --surface2: #f0f0f4;
+      --border: #e0e0e8; --text: #1a1a2e; --text2: #666688;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: 'DM Sans', sans-serif; background: var(--bg); color: var(--text); min-height: 100vh; transition: background 0.2s, color 0.2s; }
+    header { background: var(--bg); padding: 16px 20px; display: flex; align-items: center; gap: 12px; border-bottom: 1px solid var(--border); }
+    header a { color: var(--text2); text-decoration: none; font-size: 1.3rem; }
+    header h1 { font-family: 'DM Serif Display', serif; font-size: 1.1rem; }
+    .section { background: var(--surface); margin: 16px; border-radius: 14px; overflow: hidden; border: 1px solid var(--border); }
+    .section-title { font-size: 0.72rem; text-transform: uppercase; letter-spacing: 1px; color: var(--text2); padding: 14px 16px 8px; }
+    .setting-row { display: flex; align-items: center; gap: 12px; padding: 14px 16px; border-bottom: 1px solid var(--border); }
+    .setting-row:last-child { border-bottom: none; }
+    .setting-info { flex: 1; }
+    .setting-label { font-size: 0.92rem; font-weight: 500; margin-bottom: 3px; }
+    .setting-desc { font-size: 0.78rem; color: var(--text2); line-height: 1.4; }
+
+    /* Toggle switch */
+    .toggle { position: relative; width: 44px; height: 26px; flex-shrink: 0; }
+    .toggle input { opacity: 0; width: 0; height: 0; }
+    .toggle-slider {
+      position: absolute; inset: 0;
+      background: var(--surface2); border: 1px solid var(--border);
+      border-radius: 13px; cursor: pointer; transition: 0.2s;
+    }
+    .toggle-slider:before {
+      content: ""; position: absolute;
+      width: 18px; height: 18px; left: 3px; top: 3px;
+      background: var(--text2); border-radius: 50%; transition: 0.2s;
+    }
+    .toggle input:checked + .toggle-slider { background: var(--accent); border-color: var(--accent); }
+    .toggle input:checked + .toggle-slider:before { transform: translateX(18px); background: white; }
+  </style>
+</head>
+<body>
+  <header>
+    <a href="index.html">←</a>
+    <h1>Settings</h1>
+  </header>
+
+  <div class="section">
+    <div class="section-title">Language & Search</div>
+
+    <div class="setting-row">
+      <div class="setting-info">
+        <div class="setting-label">🌐 Auto-translate cover text</div>
+        <div class="setting-desc">When scanning a cover, use AI to detect the title and translate it to English before searching. Recommended for Norwegian, Swedish, and other non-English collections.</div>
+      </div>
+      <label class="toggle">
+        <input type="checkbox" id="setting-translate" onchange="saveSetting('autoTranslate', this.checked)">
+        <span class="toggle-slider"></span>
+      </label>
+    </div>
+
+    <div class="setting-row">
+      <div class="setting-info">
+        <div class="setting-label">🌙 Dark theme</div>
+        <div class="setting-desc">Switch between dark and light interface.</div>
+      </div>
+      <label class="toggle">
+        <input type="checkbox" id="setting-theme" onchange="toggleTheme(this.checked)">
+        <span class="toggle-slider"></span>
+      </label>
+    </div>
+  </div>
+
+  <script>
+    // Load saved settings
+    function loadSettings() {
+      const theme = localStorage.getItem('theme') || 'dark';
+      document.documentElement.setAttribute('data-theme', theme);
+      document.getElementById('setting-theme').checked = theme === 'dark';
+      document.getElementById('setting-translate').checked = localStorage.getItem('autoTranslate') === 'true';
+    }
+
+    function saveSetting(key, value) {
+      localStorage.setItem(key, value);
+    }
+
+    function toggleTheme(isDark) {
+      const theme = isDark ? 'dark' : 'light';
+      document.documentElement.setAttribute('data-theme', theme);
+      localStorage.setItem('theme', theme);
+    }
+
+    loadSettings();
+  </script>
+</body>
+</html>

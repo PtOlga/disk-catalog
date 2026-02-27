@@ -21,12 +21,13 @@ async function scanBarcode(barcode, itemType) {
 }
 
 async function scanCoverBase64(base64, itemType) {
+  const autoTranslate = localStorage.getItem("autoTranslate") === "true";
   const res = await fetch(`${API_URL}/scan/cover`, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ image_base64: base64, item_type: itemType })
+    body: JSON.stringify({ image_base64: base64, item_type: itemType, auto_translate: autoTranslate })
   });
-  if (!res.ok) throw new Error("Не распознано");
+  if (!res.ok) throw new Error("Could not recognise cover");
   return res.json();
 }
 
