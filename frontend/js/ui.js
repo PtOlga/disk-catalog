@@ -3,10 +3,12 @@ let currentFilter = "all";
 let currentView = "list";
 
 async function loadCatalog() {
+  document.getElementById("catalog").innerHTML = '<div class="empty" style="padding:40px;opacity:0.5">Loading...</div>';
   try {
     allItems = await fetchCatalog();
     document.getElementById("count").textContent = `${allItems.length} discs`;
-    filterItems();
+    // Small delay to ensure DOM is ready before render
+    requestAnimationFrame(() => filterItems());
   } catch (e) {
     document.getElementById("catalog").innerHTML = '<div class="empty">Failed to load. Check your connection.</div>';
   }
@@ -47,7 +49,12 @@ function filterItems() {
 // ===== LIST VIEW =====
 function renderList(items) {
   const catalog = document.getElementById("catalog");
-  if (!items.length) { catalog.innerHTML = '<div class="empty">Nothing found</div>'; return; }
+  if (!items.length) {
+    catalog.innerHTML = allItems.length === 0
+      ? '<div class="empty" style="padding:40px;opacity:0.5">Loading...</div>'
+      : '<div class="empty">Nothing found</div>';
+    return;
+  }
 
   const seriesItems = items.filter(i => i.type === "series");
   const regularItems = items.filter(i => i.type !== "series");
@@ -81,7 +88,12 @@ function renderList(items) {
 // ===== GALLERY VIEW =====
 function renderGallery(items) {
   const catalog = document.getElementById("catalog");
-  if (!items.length) { catalog.innerHTML = '<div class="empty">Nothing found</div>'; return; }
+  if (!items.length) {
+    catalog.innerHTML = allItems.length === 0
+      ? '<div class="empty" style="padding:40px;opacity:0.5">Loading...</div>'
+      : '<div class="empty">Nothing found</div>';
+    return;
+  }
 
   const colorMap = { dvd: 'var(--dvd)', series: 'var(--series)', cd_book: 'var(--book)' };
 
@@ -107,7 +119,12 @@ function renderGallery(items) {
 // ===== GROUPED VIEW =====
 function renderGrouped(items) {
   const catalog = document.getElementById("catalog");
-  if (!items.length) { catalog.innerHTML = '<div class="empty">Nothing found</div>'; return; }
+  if (!items.length) {
+    catalog.innerHTML = allItems.length === 0
+      ? '<div class="empty" style="padding:40px;opacity:0.5">Loading...</div>'
+      : '<div class="empty">Nothing found</div>';
+    return;
+  }
 
   const groupBy = document.getElementById("group-by")?.value || "genre";
   const seriesItems = items.filter(i => i.type === "series");
