@@ -30,16 +30,6 @@ async function scanCoverBase64(base64, itemType) {
   return res.json();
 }
 
-async function searchMultiple(query, itemType) {
-  const res = await fetch(`${API_URL}/scan/search`, {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ barcode: query, item_type: itemType })
-  });
-  if (!res.ok) throw new Error("Nothing found");
-  return res.json();
-}
-
 async function addToCatalog(item) {
   const res = await fetch(`${API_URL}/catalog/`, {
     method: "POST",

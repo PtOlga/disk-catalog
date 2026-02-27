@@ -7,6 +7,7 @@ function setType(type) {
   currentType = type;
   document.getElementById("btn-dvd").classList.toggle("active", type === "dvd");
   document.getElementById("btn-cd_book").classList.toggle("active", type === "cd_book");
+  if (document.getElementById("btn-series")) document.getElementById("btn-series").classList.toggle("active", type === "series");
 }
 
 async function startBarcodeScan() {
