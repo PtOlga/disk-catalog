@@ -70,7 +70,7 @@
     .logo .brand { color: var(--text2); font-style: normal; font-size: 0.75rem; font-family: 'DM Sans', sans-serif; font-weight: 500; letter-spacing: 2px; text-transform: uppercase; display: block; margin-bottom: 1px; }
     .logo .name span { color: var(--accent); font-style: italic; }
 
-    .header-right { display: flex; align-items: center; gap: 10px; }
+    .header-right { display: flex; align-items: center; gap: 8px; }
 
     .count-badge {
       font-size: 0.75rem;
@@ -146,6 +146,20 @@
     .filter-chip.active { background: var(--accent); border-color: var(--accent); color: white; }
 
     .divider { width: 1px; height: 20px; background: var(--border); flex-shrink: 0; }
+
+    .toolbar-row {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding-bottom: 12px;
+    }
+
+    .toolbar-row .toolbar {
+      flex: 1;
+      overflow-x: auto;
+      scrollbar-width: none;
+      padding-bottom: 0;
+    }
 
     .view-toggle {
       display: flex;
@@ -236,8 +250,8 @@
     /* GALLERY VIEW */
     .gallery-view {
       display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 10px;
+      grid-template-columns: repeat(auto-fill, minmax(80px, 1fr));
+      gap: 8px;
     }
 
     .gallery-item {
@@ -326,7 +340,7 @@
     .series-disc-row {
       display: flex;
       align-items: center;
-      gap: 10px;
+      gap: 8px;
       padding: 10px 12px;
       border-bottom: 1px solid var(--border);
       cursor: pointer;
@@ -378,12 +392,13 @@
       <span class="search-icon">🔍</span>
       <input type="text" id="search" placeholder="Search by title, director..." oninput="filterItems()">
     </div>
-    <div class="toolbar">
-      <button class="filter-chip active" onclick="setFilter('all', this)">All</button>
-      <button class="filter-chip" onclick="setFilter('dvd', this)">🎬 DVD</button>
-      <button class="filter-chip" onclick="setFilter('series', this)">📺 Series</button>
-      <button class="filter-chip" onclick="setFilter('cd_book', this)">📚 Books</button>
-      <div class="divider"></div>
+    <div class="toolbar-row">
+      <div class="toolbar">
+        <button class="filter-chip active" onclick="setFilter('all', this)">All</button>
+        <button class="filter-chip" onclick="setFilter('dvd', this)">🎬 DVD</button>
+        <button class="filter-chip" onclick="setFilter('series', this)">📺 Series</button>
+        <button class="filter-chip" onclick="setFilter('cd_book', this)">📚 Books</button>
+      </div>
       <div class="view-toggle">
         <button class="view-btn active" onclick="setView('list', this)" title="List">☰</button>
         <button class="view-btn" onclick="setView('gallery', this)" title="Gallery">⊞</button>
