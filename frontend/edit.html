@@ -20,8 +20,14 @@
     textarea { resize: vertical; min-height: 72px; }
     .btn { width: 100%; padding: 12px; border: none; border-radius: 8px; font-size: 1rem; cursor: pointer; margin-top: 10px; }
     .btn-primary { background: #1a73e8; color: white; }
+    .btn-secondary { background: #f0f0f0; color: #333; }
     .btn-danger { background: #d93025; color: white; }
-    .cover-preview { width: 80px; height: 110px; object-fit: cover; border-radius: 8px; background: #eee; display: block; margin-bottom: 8px; }
+    .cover-row { display: flex; gap: 12px; align-items: flex-start; margin-bottom: 4px; }
+    .cover-preview { width: 80px; height: 110px; object-fit: cover; border-radius: 8px; background: #eee; flex-shrink: 0; }
+    .cover-actions { display: flex; flex-direction: column; gap: 8px; padding-top: 4px; }
+    .btn-sm { padding: 8px 12px; border: none; border-radius: 8px; font-size: 0.85rem; cursor: pointer; white-space: nowrap; }
+    .btn-sm-secondary { background: #f0f0f0; color: #333; }
+    #cover-uploading { font-size: 0.8rem; color: #888; margin-top: 4px; display: none; }
     #loading { text-align: center; padding: 40px; color: #999; }
     #form-wrap { display: none; }
   </style>
@@ -36,7 +42,15 @@
 
   <div id="form-wrap">
     <div class="section">
-      <img id="cover-preview" class="cover-preview" alt="">
+
+      <div class="cover-row">
+        <img id="cover-preview" class="cover-preview" alt="" style="display:none">
+        <div class="cover-actions">
+          <input type="file" id="cover-file" accept="image/*" capture="environment" style="display:none" onchange="replaceCover(this)">
+          <button class="btn-sm btn-sm-secondary" onclick="document.getElementById('cover-file').click()">📷 Replace Cover</button>
+          <span id="cover-uploading">Recognising...</span>
+        </div>
+      </div>
 
       <label>Type</label>
       <select id="f-type">
@@ -111,6 +125,45 @@
       } else {
         img.style.display = "none";
       }
+    }
+
+    async function replaceCover(input) {
+      const file = input.files[0];
+      if (!file) return;
+
+      const status = document.getElementById("cover-uploading");
+      status.style.display = "block";
+
+      const reader = new FileReader();
+      reader.onload = async (e) => {
+        const base64 = e.target.result.split(",")[1];
+        const itemType = document.getElementById("f-type").value;
+        try {
+          const item = await scanCoverBase64(base64, itemType);
+          if (item.cover_url) {
+            document.getElementById("f-cover-url").value = item.cover_url;
+            updateCoverPreview(item.cover_url);
+          }
+          // Also fill in other fields if they are empty
+          if (item.title && !document.getElementById("f-title").value) {
+            document.getElementById("f-title").value = item.title;
+          }
+          if (item.author && !document.getElementById("f-author").value) {
+            document.getElementById("f-author").value = item.author;
+          }
+          if (item.year && !document.getElementById("f-year").value) {
+            document.getElementById("f-year").value = item.year;
+          }
+          if (item.genre && !document.getElementById("f-genre").value) {
+            document.getElementById("f-genre").value = item.genre;
+          }
+        } catch (err) {
+          alert("Could not recognise the cover. You can paste a cover URL manually.");
+        } finally {
+          status.style.display = "none";
+        }
+      };
+      reader.readAsDataURL(file);
     }
 
     async function saveChanges() {
