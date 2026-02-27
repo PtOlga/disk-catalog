@@ -1,6 +1,6 @@
 from fastapi import APIRouter, HTTPException
 from app.models.item import CoverRequest, CatalogItem
-from app.services import vision, omdb, openlib, claude_translate
+from app.services import vision, omdb, openlib, google_translate
 
 router = APIRouter()
 
@@ -14,7 +14,7 @@ async def scan_cover(request: CoverRequest):
 
     if request.auto_translate:
         # Use Claude to extract title and translate to English
-        search_title = await claude_translate.extract_and_translate_title(
+        search_title = await google_translate.extract_and_translate_title(
             full_text, request.item_type.value
         )
     else:
