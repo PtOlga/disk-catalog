@@ -137,7 +137,7 @@ function renderGrouped(items) {
     html += `
       <div class="group-section">
         <div class="group-heading">
-          <h2>TV Series</h2>
+          <h2>Series</h2>
           <span class="group-count">${seriesItems.length} disc${seriesItems.length > 1 ? "s" : ""}</span>
           <div class="group-line"></div>
         </div>
@@ -227,7 +227,7 @@ function renderSeriesGroups(seriesItems) {
           <div class="series-info">
             <div class="series-title">${name}</div>
             <div class="series-seasons">${seasonSummary}</div>
-            <span class="type-badge badge-series">📺 TV Series · ${discs.length} disc${discs.length > 1 ? "s" : ""}</span>
+            <span class="type-badge badge-series">📺 Series · ${discs.length} disc${discs.length > 1 ? "s" : ""}</span>
           </div>
         </div>
         <div class="series-discs">
