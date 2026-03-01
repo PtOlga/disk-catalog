@@ -48,11 +48,13 @@
       <div class="cover-row">
         <img id="cover-preview" class="cover-preview" alt="" style="display:none">
         <div class="cover-actions">
-          <input type="file" id="cover-file-camera" accept="image/*" capture="environment" style="display:none" onchange="replaceCover(this)">
-          <input type="file" id="cover-file-gallery" accept="image/*" style="display:none" onchange="replaceCover(this)">
-          <button class="btn-sm btn-sm-secondary" onclick="document.getElementById('cover-file-camera').click()">📷 Camera</button>
-          <button class="btn-sm btn-sm-secondary" onclick="document.getElementById('cover-file-gallery').click()">🖼 Gallery</button>
-          <span id="cover-uploading">Recognising...</span>
+          <!-- Camera: scan cover → Vision API → search OMDb -->
+          <input type="file" id="cover-file-camera" accept="image/*" capture="environment" style="display:none" onchange="scanCover(this)">
+          <!-- Gallery: just upload photo → Firebase Storage → save URL -->
+          <input type="file" id="cover-file-gallery" accept="image/*" style="display:none" onchange="uploadCover(this)">
+          <button class="btn-sm btn-sm-secondary" onclick="document.getElementById('cover-file-camera').click()">📷 Scan Cover</button>
+          <button class="btn-sm btn-sm-secondary" onclick="document.getElementById('cover-file-gallery').click()">🖼 Upload Photo</button>
+          <span id="cover-uploading">Uploading...</span>
         </div>
       </div>
 
@@ -63,14 +65,11 @@
         <option value="cd_book">📚 CD Book</option>
       </select>
 
-      <!-- Series-specific fields -->
       <div class="series-fields" id="series-fields">
         <label>Series Name</label>
         <input type="text" id="f-series-name" placeholder="e.g. Twin Peaks">
-
         <label>Season</label>
         <input type="number" id="f-season" placeholder="1" min="1" max="99">
-
         <label>Episodes on this disc</label>
         <input type="text" id="f-episodes" placeholder="e.g. 1-4 or 1,3,5">
         <p class="hint">Which episodes are on this physical disc</p>
@@ -105,11 +104,37 @@
     </div>
   </div>
 
+  <!-- Firebase SDK -->
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/11.0.0/firebase-app.js";
+    import { getStorage, ref, uploadBytes, getDownloadURL } from "https://www.gstatic.com/firebasejs/11.0.0/firebase-storage.js";
+
+    const firebaseConfig = {
+      apiKey: "AIzaSyDRWwvzc5nHqWgqtCO41rTQQf__10dsH8A",
+      authDomain: "disk-catalog-488612.firebaseapp.com",
+      projectId: "disk-catalog-488612",
+      storageBucket: "disk-catalog-488612.firebasestorage.app",
+      messagingSenderId: "759669863291",
+      appId: "1:759669863291:web:e195add474316223f003de"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const storage = getStorage(app);
+
+    // Expose uploadToStorage globally so uploadCover() can use it
+    window.uploadToStorage = async function(file, itemId) {
+      const ext = file.name.split(".").pop() || "jpg";
+      const path = `covers/${itemId}_${Date.now()}.${ext}`;
+      const storageRef = ref(storage, path);
+      await uploadBytes(storageRef, file);
+      return await getDownloadURL(storageRef);
+    };
+  </script>
+
   <script src="js/api.js"></script>
   <script>
     const params = new URLSearchParams(location.search);
     const itemId = params.get("id");
-
     if (!itemId) location.href = "index.html";
 
     function toggleSeriesFields() {
@@ -152,10 +177,12 @@
       }
     }
 
-    async function replaceCover(input) {
+    // Camera: scan cover → Vision API → fill fields from OMDb
+    async function scanCover(input) {
       const file = input.files[0];
       if (!file) return;
       const status = document.getElementById("cover-uploading");
+      status.textContent = "Recognising...";
       status.style.display = "block";
       const reader = new FileReader();
       reader.onload = async (e) => {
@@ -176,12 +203,33 @@
           if (item.genre && !document.getElementById("f-genre").value)
             document.getElementById("f-genre").value = item.genre;
         } catch (err) {
-          alert("Could not recognise the cover. You can paste a cover URL manually.");
+          alert("Could not recognise the cover. You can upload a photo manually.");
         } finally {
           status.style.display = "none";
         }
       };
       reader.readAsDataURL(file);
+    }
+
+    // Gallery: upload photo directly to Firebase Storage → update cover URL
+    async function uploadCover(input) {
+      const file = input.files[0];
+      if (!file) return;
+      const status = document.getElementById("cover-uploading");
+      status.textContent = "Uploading...";
+      status.style.display = "block";
+      try {
+        if (!window.uploadToStorage) {
+          throw new Error("Firebase Storage not ready yet, please try again.");
+        }
+        const url = await window.uploadToStorage(file, itemId);
+        document.getElementById("f-cover-url").value = url;
+        updateCoverPreview(url);
+      } catch (err) {
+        alert("Upload failed: " + err.message);
+      } finally {
+        status.style.display = "none";
+      }
     }
 
     async function saveChanges() {
