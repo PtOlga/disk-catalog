@@ -204,7 +204,14 @@ function renderSeriesGroups(seriesItems) {
 
   let html = "";
   Object.entries(groups).forEach(([name, discs]) => {
-    discs.sort((a, b) => (a.season || 0) - (b.season || 0));
+    discs.sort((a, b) => {
+      // Sort by season first, then by first episode number
+      const seasonDiff = (a.season || 0) - (b.season || 0);
+      if (seasonDiff !== 0) return seasonDiff;
+      const epA = parseInt((a.episodes || "0").toString().split(/[-,]/)[0]) || 0;
+      const epB = parseInt((b.episodes || "0").toString().split(/[-,]/)[0]) || 0;
+      return epA - epB;
+    });
 
     const seasonMap = {};
     discs.forEach(d => {
