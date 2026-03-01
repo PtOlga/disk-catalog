@@ -2,6 +2,21 @@ let allItems = [];
 let currentFilter = "all";
 let currentView = "list";
 
+function sortItems(items) {
+  return [...items].sort((a, b) => {
+    // Sort key: alphabetical name → season (0 for dvd/book) → episode (0 for dvd/book)
+    const nameA = (a.series_name || a.title).toLowerCase();
+    const nameB = (b.series_name || b.title).toLowerCase();
+    const nameDiff = nameA.localeCompare(nameB);
+    if (nameDiff !== 0) return nameDiff;
+    const seasonDiff = (a.season || 0) - (b.season || 0);
+    if (seasonDiff !== 0) return seasonDiff;
+    const epA = parseInt((a.episodes || "0").toString().split(/[-,]/)[0]) || 0;
+    const epB = parseInt((b.episodes || "0").toString().split(/[-,]/)[0]) || 0;
+    return epA - epB;
+  });
+}
+
 async function loadCatalog() {
   document.getElementById("catalog").innerHTML = '<div class="empty" style="padding:40px;opacity:0.5">Loading...</div>';
   try {
@@ -41,9 +56,10 @@ function filterItems() {
       (i.genre && i.genre.toLowerCase().includes(search));
   });
 
-  if (currentView === "list") renderList(filtered);
-  else if (currentView === "gallery") renderGallery(filtered);
-  else if (currentView === "grouped") renderGrouped(filtered);
+  const sorted = sortItems(filtered);
+  if (currentView === "list") renderList(sorted);
+  else if (currentView === "gallery") renderGallery(sorted);
+  else if (currentView === "grouped") renderGrouped(sorted);
 }
 
 // ===== LIST VIEW =====
