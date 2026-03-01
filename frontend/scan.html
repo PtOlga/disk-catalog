@@ -66,8 +66,23 @@
     <button class="btn btn-primary" onclick="saveItem()">✅ Add to Catalog</button>
   </div>
 
+  <div class="section" style="background:#f0f4ff;border:2px dashed #1a73e8">
+    <h2 style="color:#1a73e8">➕ Add Manually</h2>
+    <p style="font-size:0.85rem;color:#555;margin-bottom:12px">Disc not found? Create a card and fill in details yourself.</p>
+    <button class="btn btn-primary" onclick="addManually()">Create Empty Card</button>
+  </div>
+
   <script src="https://unpkg.com/@zxing/library@latest/umd/index.min.js"></script>
   <script src="js/api.js"></script>
   <script src="js/camera.js"></script>
+  <script>
+    function addManually() {
+      const title = document.getElementById("manual-title").value.trim();
+      const type = window.currentItemType || "dvd";
+      const params = new URLSearchParams({ new: "1", type });
+      if (title) params.set("title", title);
+      location.href = "edit.html?" + params.toString();
+    }
+  </script>
 </body>
 </html>

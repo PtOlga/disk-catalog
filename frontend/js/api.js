@@ -47,6 +47,16 @@ async function getItem(id) {
   return res.json();
 }
 
+async function createItem(item) {
+  const res = await fetch(`${API_URL}/catalog/`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(item)
+  });
+  if (!res.ok) throw new Error("Failed to create item");
+  return res.json();
+}
+
 async function updateItem(id, item) {
   const res = await fetch(`${API_URL}/catalog/${id}`, {
     method: "PUT",

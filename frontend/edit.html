@@ -135,7 +135,8 @@
   <script>
     const params = new URLSearchParams(location.search);
     const itemId = params.get("id");
-    if (!itemId) location.href = "index.html";
+    const isNew = params.get("new") === "1";
+    if (!itemId && !isNew) location.href = "index.html";
 
     function toggleSeriesFields() {
       const type = document.getElementById("f-type").value;
@@ -143,6 +144,17 @@
     }
 
     async function loadItem() {
+      // New empty card
+      if (isNew) {
+        const type = params.get("type") || "dvd";
+        const title = params.get("title") || "";
+        document.getElementById("f-type").value = type;
+        document.getElementById("f-title").value = title;
+        toggleSeriesFields();
+        document.getElementById("loading").style.display = "none";
+        document.getElementById("form-wrap").style.display = "block";
+        return;
+      }
       try {
         const item = await getItem(itemId);
         document.getElementById("f-type").value = item.type || "dvd";
@@ -252,7 +264,11 @@
         episodes: document.getElementById("f-episodes").value.trim() || null,
       };
       try {
-        await updateItem(itemId, item);
+        if (isNew) {
+          await createItem(item);
+        } else {
+          await updateItem(itemId, item);
+        }
         location.href = "index.html";
       } catch (e) {
         alert("Save error: " + e.message);
